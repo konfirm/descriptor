@@ -1,7 +1,7 @@
 {
 	"name": "@konfirm/descriptor",
 	"version": "0.0.0",
-	"description": "Normalized PropertyDescriptors",
+	"description": "Easier PropertyDescriptor composition",
 	"iife": "dist/descriptor.js",
 	"main": "dist/descriptor.cjs.js",
 	"module": "dist/descriptor.es.js",
