@@ -13,8 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
-## [1.0.0] - 2021-11-30
+## [1.0.0] - 2021-12-01
 
 _Initial release_
 
 [Unreleased]: https://github.com/konfirm/descriptor/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/konfirm/descriptor/releases/tag/v1.0.0
