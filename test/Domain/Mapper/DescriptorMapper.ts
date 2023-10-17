@@ -76,7 +76,7 @@ test('Domain/Mapper/DescriptorMapper - merge', (t) => {
 		${{ get: getter, set: setter }}               | ${{ enumerable: false, configurable: true, get: getter, set: setter }}
 		${{ enumerable: true }}                       | ${{ enumerable: true, configurable: true, get: getter, set: setter }}
 		${{ value: 'modify' }}                        | ${{ enumerable: true, configurable: true, value: 'modify' }}
-	`(({ input, current }) => {
+	`(({ input, current }: any) => {
 		merged = DescriptorMapper.merge(merged, input);
 
 		t.deepEqual(merged, current, `Adding ${stringify(input)} should result in ${stringify(current)}`);
