@@ -3,6 +3,16 @@ import type { Descriptor } from '../Guard/Descriptor';
 
 type Key = string | symbol;
 type ObjectLiteral = { [key: Key]: unknown };
+type PropertyDescriptorKey = keyof PropertyDescriptor;
+
+const keys: { [key: string]: PropertyDescriptorKey } = {
+	VALUE: 'value',
+	GET: 'get',
+	SET: 'set',
+	CONFIGURABLE: 'configurable',
+	ENUMERABLE: 'enumerable',
+	WRITABLE: 'writable',
+}
 
 export class DescriptorMapper {
 	static only<T extends ObjectLiteral = ObjectLiteral>(target: T, ...keys: Array<Key>): T {
@@ -25,21 +35,21 @@ export class DescriptorMapper {
 		}
 		let input = one;
 
-		if ('get' in two || 'set' in two) {
-			input = this.omit(input, 'value', 'writable');
+		if (keys.GET in two || keys.SET in two) {
+			input = this.omit(input, keys.VALUE, keys.WRITABLE);
 		}
-		else if ('value' in two || 'writable' in two) {
-			input = this.omit(input, 'get', 'set');
+		else if (keys.VALUE in two || keys.WRITABLE in two) {
+			input = this.omit(input, keys.GET, keys.SET);
 		}
 
 		const output = Object.assign({} as T, input, two);
 
 		// one can't exist without the other
-		if ('set' in output && !('get' in output)) {
-			output.get = () => { };
+		if (keys.SET in output && !(keys.GET in output)) {
+			output[keys.GET] = () => { };
 		}
-		if ('writable' in output && !('value' in output)) {
-			output.value = undefined;
+		if (keys.WRITABLE in output && !(keys.VALUE in output)) {
+			output[keys.VALUE] = undefined;
 		}
 
 		return output;
