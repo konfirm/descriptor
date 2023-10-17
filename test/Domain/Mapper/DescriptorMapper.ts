@@ -1,5 +1,5 @@
 import test from 'tape';
-import each from 'template-literal-each';
+import { each } from 'template-literal-each';
 import { stringify } from '@konfirm/stringify';
 import * as Export from '../../../source/Domain/Mapper/DescriptorMapper';
 
