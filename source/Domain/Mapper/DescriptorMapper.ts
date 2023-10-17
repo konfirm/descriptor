@@ -15,6 +15,12 @@ const keys: { [key: string]: PropertyDescriptorKey } = {
 }
 
 export class DescriptorMapper {
+	static get(target: object, key: string | symbol): PropertyDescriptor {
+		const mimic = this.mimic(target, key as keyof typeof target);
+
+		return Object.getOwnPropertyDescriptor(mimic, key);
+	}
+
 	static only<T extends ObjectLiteral = ObjectLiteral>(target: T, ...keys: Array<Key>): T {
 		return keys
 			.filter((key) => key in target && !isUndefined(target[key]))
@@ -27,6 +33,16 @@ export class DescriptorMapper {
 
 	static merge<T extends Descriptor = Descriptor>(...descriptors: Array<T | undefined>): T | undefined {
 		return descriptors.reduce((carry, desc) => this.combine<T>(carry, desc), undefined);
+	}
+
+	private static mimic(target: object, key: keyof typeof target): typeof target {
+		const mimic = { [key]: target[key] };
+
+		if (Object.isFrozen(target)) Object.freeze(mimic);
+		if (Object.isSealed(target)) Object.seal(mimic);
+		if (!Object.isExtensible(target)) Object.preventExtensions(mimic);
+
+		return mimic;
 	}
 
 	private static combine<T extends Descriptor = Descriptor>(one: T | undefined, two: T | undefined): T | undefined {
