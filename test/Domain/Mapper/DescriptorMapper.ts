@@ -1,5 +1,5 @@
 import test from 'tape';
-import each from 'template-literal-each';
+import { each } from 'template-literal-each';
 import { stringify } from '@konfirm/stringify';
 import * as Export from '../../../source/Domain/Mapper/DescriptorMapper';
 
@@ -16,6 +16,78 @@ test('Domain/Mapper/DescriptorMapper - exports', (t) => {
 });
 
 const { DescriptorMapper } = Export;
+
+test('Domain/Mapper/DescriptorMapper - get', (t) => {
+	function clone(struct: object, ...invoke: Array<'freeze' | 'seal' | 'preventExtensions'>): typeof struct {
+		const cloned = { ...struct };
+
+		invoke.forEach((method) => (<any>Object[method as keyof Object])(cloned));
+
+		return cloned;
+	}
+
+	const sym = Symbol();
+	const standard = { foo: 1, bar: 2, baz: 3, [sym]: 4 };
+	const standard_f = clone(standard, 'freeze');
+	const standard_s = clone(standard, 'seal');
+	const standard_p = clone(standard, 'preventExtensions');
+	const standard_fs = clone(standard, 'freeze', 'seal');
+	const standard_fp = clone(standard, 'freeze', 'preventExtensions');
+	const standard_sp = clone(standard, 'seal', 'preventExtensions');
+	const standard_fsp = clone(standard, 'freeze', 'seal', 'preventExtensions');
+
+	each`
+		target          | state                                 | key    | value | writable | configurable
+		----------------|---------------------------------------|--------|-------|----------|--------------
+		${standard}     |                                       | foo    | ${1}  | ${true}  | ${true}
+		${standard}     |                                       | bar    | ${2}  | ${true}  | ${true}
+		${standard}     |                                       | baz    | ${3}  | ${true}  | ${true}
+		${standard}     |                                       | ${sym} | ${4}  | ${true}  | ${true}
+		${standard}     |                                       | new    |       | ${true}  | ${true}
+		${standard_f}   | frozen                                | foo    | ${1}  | ${false} | ${false}
+		${standard_f}   | frozen                                | bar    | ${2}  | ${false} | ${false}
+		${standard_f}   | frozen                                | baz    | ${3}  | ${false} | ${false}
+		${standard_f}   | frozen                                | ${sym} | ${4}  | ${false} | ${false}
+		${standard_f}   | frozen                                | new    |       | ${false} | ${false}
+		${standard_s}   | sealed                                | foo    | ${1}  | ${true}  | ${false}
+		${standard_s}   | sealed                                | bar    | ${2}  | ${true}  | ${false}
+		${standard_s}   | sealed                                | baz    | ${3}  | ${true}  | ${false}
+		${standard_s}   | sealed                                | ${sym} | ${4}  | ${true}  | ${false}
+		${standard_s}   | sealed                                | new    |       | ${true}  | ${false}
+		${standard_p}   | prevent extensions                    | foo    | ${1}  | ${true}  | ${true}
+		${standard_p}   | prevent extensions                    | bar    | ${2}  | ${true}  | ${true}
+		${standard_p}   | prevent extensions                    | baz    | ${3}  | ${true}  | ${true}
+		${standard_p}   | prevent extensions                    | ${sym} | ${4}  | ${true}  | ${true}
+		${standard_p}   | prevent extensions                    | new    |       | ${true}  | ${true}
+		${standard_fs}  | frozen and sealed                     | foo    | ${1}  | ${false} | ${false}
+		${standard_fs}  | frozen and sealed                     | bar    | ${2}  | ${false} | ${false}
+		${standard_fs}  | frozen and sealed                     | baz    | ${3}  | ${false} | ${false}
+		${standard_fs}  | frozen and sealed                     | ${sym} | ${4}  | ${false} | ${false}
+		${standard_fs}  | frozen and sealed                     | new    |       | ${false} | ${false}
+		${standard_fp}  | frozen and prevent extensions         | foo    | ${1}  | ${false} | ${false}
+		${standard_fp}  | frozen and prevent extensions         | bar    | ${2}  | ${false} | ${false}
+		${standard_fp}  | frozen and prevent extensions         | baz    | ${3}  | ${false} | ${false}
+		${standard_fp}  | frozen and prevent extensions         | ${sym} | ${4}  | ${false} | ${false}
+		${standard_fp}  | frozen and prevent extensions         | new    |       | ${false} | ${false}
+		${standard_sp}  | sealed and prevent extensions         | foo    | ${1}  | ${true}  | ${false}
+		${standard_sp}  | sealed and prevent extensions         | bar    | ${2}  | ${true}  | ${false}
+		${standard_sp}  | sealed and prevent extensions         | baz    | ${3}  | ${true}  | ${false}
+		${standard_sp}  | sealed and prevent extensions         | ${sym} | ${4}  | ${true}  | ${false}
+		${standard_sp}  | sealed and prevent extensions         | new    |       | ${true}  | ${false}
+		${standard_fsp} | frozen, sealed and prevent extensions | foo    | ${1}  | ${false} | ${false}
+		${standard_fsp} | frozen, sealed and prevent extensions | bar    | ${2}  | ${false} | ${false}
+		${standard_fsp} | frozen, sealed and prevent extensions | baz    | ${3}  | ${false} | ${false}
+		${standard_fsp} | frozen, sealed and prevent extensions | ${sym} | ${4}  | ${false} | ${false}
+		${standard_fsp} | frozen, sealed and prevent extensions | new    |       | ${false} | ${false}
+	`(({ target, state, key, value, writable, configurable }: any) => {
+		const flags = { value, writable, enumerable: true, configurable };
+
+		t.deepEqual(DescriptorMapper.get(target, key), flags, `${state} ${JSON.stringify(target)} has ${key.toString()} descriptor ${JSON.stringify(flags)}`);
+	});
+
+	t.end();
+});
+
 
 test('Domain/Mapper/DescriptorMapper - only', (t) => {
 	const sample = { foo: 1, bar: 2, baz: 3 };
@@ -76,7 +148,7 @@ test('Domain/Mapper/DescriptorMapper - merge', (t) => {
 		${{ get: getter, set: setter }}               | ${{ enumerable: false, configurable: true, get: getter, set: setter }}
 		${{ enumerable: true }}                       | ${{ enumerable: true, configurable: true, get: getter, set: setter }}
 		${{ value: 'modify' }}                        | ${{ enumerable: true, configurable: true, value: 'modify' }}
-	`(({ input, current }) => {
+	`(({ input, current }: any) => {
 		merged = DescriptorMapper.merge(merged, input);
 
 		t.deepEqual(merged, current, `Adding ${stringify(input)} should result in ${stringify(current)}`);

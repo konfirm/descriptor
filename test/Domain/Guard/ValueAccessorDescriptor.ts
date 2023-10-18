@@ -1,5 +1,5 @@
 import test from 'tape';
-import each from 'template-literal-each';
+import { each } from 'template-literal-each';
 import { stringify } from '@konfirm/stringify';
 import { DescriptorMapper } from '../../../source/Domain/Mapper/DescriptorMapper';
 import * as Export from '../../../source/Domain/Guard/ValueAccessorDescriptor';
