@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
-## [1.0.1] - 2023-10-17
+
+## [1.1.0] - 2023-10-18
 
 ### Added
 - Implemented get method
@@ -26,6 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Initial release_
 
-[Unreleased]: https://github.com/konfirm/descriptor/compare/v1.0.1...HEAD
-[1.0.1]: https://github.com/konfirm/descriptor/compare/v1.0.0...v1.0.1
+[Unreleased]: https://github.com/konfirm/descriptor/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/konfirm/descriptor/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/konfirm/descriptor/releases/tag/v1.0.0
