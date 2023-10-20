@@ -16,9 +16,11 @@ const keys: { [key: string]: PropertyDescriptorKey } = {
 
 export class DescriptorMapper {
 	static get(target: object, key: string | symbol): PropertyDescriptor {
-		const mimic = this.mimic(target, key as keyof typeof target);
+		const subject = key in target
+			? target
+			: this.mimic(target, <keyof typeof target>key)
 
-		return Object.getOwnPropertyDescriptor(mimic, key);
+		return Object.getOwnPropertyDescriptor(subject, key);
 	}
 
 	static only<T extends ObjectLiteral = ObjectLiteral>(target: T, ...keys: Array<Key>): T {
