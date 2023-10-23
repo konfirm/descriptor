@@ -11,9 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Removed
 ### Fixed
-- Fixed issue where existing flags would not be correctly returned
-  
 ### Security
+
+
+## [1.1.1] - 2023-10-23
+
+### Fixed
+- Fixed issue where existing flags would not be correctly returned
 
 
 ## [1.1.0] - 2023-10-18
@@ -29,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Initial release_
 
-[Unreleased]: https://github.com/konfirm/descriptor/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/konfirm/descriptor/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/konfirm/descriptor/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/konfirm/descriptor/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/konfirm/descriptor/releases/tag/v1.0.0
