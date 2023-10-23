@@ -58,7 +58,7 @@ test('Domain/Mapper/DescriptorMapper - get', (t) => {
 		${standard_p}   | prevent extensions                    | bar    | ${2}  | ${true}  | ${true}
 		${standard_p}   | prevent extensions                    | baz    | ${3}  | ${true}  | ${true}
 		${standard_p}   | prevent extensions                    | ${sym} | ${4}  | ${true}  | ${true}
-		${standard_p}   | prevent extensions                    | new    |       | ${true}  | ${true}
+		${standard_p}   | prevent extensions                    | new    |       | ${true}  | ${false}
 		${standard_fs}  | frozen and sealed                     | foo    | ${1}  | ${false} | ${false}
 		${standard_fs}  | frozen and sealed                     | bar    | ${2}  | ${false} | ${false}
 		${standard_fs}  | frozen and sealed                     | baz    | ${3}  | ${false} | ${false}
